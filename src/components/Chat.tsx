@@ -42,15 +42,29 @@ const Message = styled("p")<{ from: "user" | "bot" }>`
   float: ${(props) => (props.from === "bot" ? "left" : "right")};
 `;
 
+function getBotResponse(message: string): Promise<string> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(`You said: "${message}"`);
+    }, 1000);
+  });
+}
+
 export default function Chat() {
   const [messages, setMessages] = createSignal<Array<{ text: string; from: "user" | "bot" }>>([]);
   const [input, setInput] = createSignal("");
 
   const handleSubmit = (event: Event) => {
     event.preventDefault();
+    const userMessage = { text: input(), from: "user" };
     setMessages([...messages(), { text: input(), from: "user" }]);
     setInput("");
+  
+    getBotResponse(userMessage.text).then((botResponse) => {
+      setMessages((prevMessages) => [...prevMessages, { text: botResponse, from: "bot" }]);
+    });
   };
+  
 
   return (
     <Wrapper>
