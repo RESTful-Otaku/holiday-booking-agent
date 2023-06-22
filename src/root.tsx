@@ -1,39 +1,20 @@
-// @refresh reload
-import { Suspense } from "solid-js";
-import {
-  A,
-  Body,
-  ErrorBoundary,
-  FileRoutes,
-  Head,
-  Html,
-  Meta,
-  Routes,
-  Scripts,
-  Title,
-} from "solid-start";
-import "./root.css";
+import { createSignal } from "solid-js";
+import { styled } from "solid-styled-components";
 
-export default function Root() {
+const Wrapper = styled("div")`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: space-between;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #f5f5f5;
+`;
+
+export default function Chat() {
   return (
-    <Html lang="en">
-      <Head>
-        <Title>SolidStart - Bare</Title>
-        <Meta charset="utf-8" />
-        <Meta name="viewport" content="width=device-width, initial-scale=1" />
-      </Head>
-      <Body>
-        <Suspense>
-          <ErrorBoundary>
-            <A href="/">Index</A>
-            <A href="/about">About</A>
-            <Routes>
-              <FileRoutes />
-            </Routes>
-          </ErrorBoundary>
-        </Suspense>
-        <Scripts />
-      </Body>
-    </Html>
+    <Wrapper>
+      <p>Welcome to the chat!</p>
+    </Wrapper>
   );
 }
