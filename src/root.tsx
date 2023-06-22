@@ -1,5 +1,5 @@
-import { createSignal } from "solid-js";
 import { styled } from "solid-styled-components";
+import Chat from "./components/Chat";
 
 const Wrapper = styled("div")`
   display: flex;
@@ -11,10 +11,10 @@ const Wrapper = styled("div")`
   background-color: #f5f5f5;
 `;
 
-export default function Chat() {
+export default function Root() {
   return (
     <Wrapper>
-      <p>Welcome to the chat!</p>
+      <Chat />
     </Wrapper>
   );
 }
