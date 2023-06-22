@@ -1,4 +1,4 @@
-import { createSignal } from "solid-js";
+import { createSignal, onCleanup } from "solid-js";
 import { styled } from "solid-styled-components";
 
 const Wrapper = styled("div")`
@@ -53,6 +53,14 @@ function getBotResponse(message: string): Promise<string> {
 export default function Chat() {
   const [messages, setMessages] = createSignal<Array<{ text: string; from: "user" | "bot" }>>([]);
   const [input, setInput] = createSignal("");
+  const [isBotTyping, setIsBotTyping] = createSignal(false);
+
+  onCleanup(() => {
+    const chat = document.getElementById("chat");
+    if (chat) {
+      chat.scrollTop = chat.scrollHeight;
+    }
+  });  
 
   const handleSubmit = (event: Event) => {
     event.preventDefault();
@@ -60,20 +68,23 @@ export default function Chat() {
     setMessages([...messages(), { text: input(), from: "user" }]);
     setInput("");
   
-    getBotResponse(userMessage.text).then((botResponse) => {
-      setMessages((prevMessages) => [...prevMessages, { text: botResponse, from: "bot" }]);
-    });
-  };
-  
+    setIsBotTyping(true);
+  getBotResponse(userMessage.text).then((botResponse) => {
+    setIsBotTyping(false);
+    setMessages((prevMessages) => [...prevMessages, { text: botResponse, from: "bot" }]);
+  });
+};
 
+  
   return (
     <Wrapper>
-      <MessageList>
+      <MessageList id="chat">
         {messages().map((message, index) => (
           <Message from={message.from}>
             {message.text}
           </Message>
         ))}
+        {isBotTyping() && <p>Bot is typing...</p>}
       </MessageList>
       <MessageForm onSubmit={handleSubmit}>
         <MessageInput
