@@ -27,13 +27,28 @@ const MessageForm = styled("form")`
   justify-content: space-between;
 `;
 
+const Message = styled("p")<{ from: "user" | "bot" }>`
+  max-width: 60%;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 20px;
+  position: relative;
+  clear: both;
+  line-height: 1.5;
+  transition: transform 0.3s ease;
+  color: white;
+  background-color: ${(props) => (props.from === "bot" ? "#0b93f6" : "#3f3f3f")};
+  align-self: ${(props) => (props.from === "bot" ? "flex-start" : "flex-end")};
+  float: ${(props) => (props.from === "bot" ? "left" : "right")};
+`;
+
 export default function Chat() {
-  const [messages, setMessages] = createSignal<string[]>([]);
+  const [messages, setMessages] = createSignal<Array<{ text: string; from: "user" | "bot" }>>([]);
   const [input, setInput] = createSignal("");
 
   const handleSubmit = (event: Event) => {
     event.preventDefault();
-    setMessages([...messages(), input()]);
+    setMessages([...messages(), { text: input(), from: "user" }]);
     setInput("");
   };
 
@@ -41,7 +56,9 @@ export default function Chat() {
     <Wrapper>
       <MessageList>
         {messages().map((message, index) => (
-          <p>{message}</p>
+          <Message from={message.from}>
+            {message.text}
+          </Message>
         ))}
       </MessageList>
       <MessageForm onSubmit={handleSubmit}>
@@ -54,3 +71,4 @@ export default function Chat() {
     </Wrapper>
   );
 }
+
